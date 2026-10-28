@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+  <ItemGroup><ProjectReference Include="../SincTrello.Infrastructure/SincTrello.Infrastructure.csproj" /></ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets/Fonts/*.ttf" />
+    <Content Include="Assets/Fonts/*.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

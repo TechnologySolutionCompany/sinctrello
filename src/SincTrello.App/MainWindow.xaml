@@ -1,0 +1,274 @@
+<Window x:Class="SincTrello.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="SincTrello — S.T" Style="{StaticResource {x:Type Window}}" Width="1380" Height="900" MinWidth="1100" MinHeight="700"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResize"
+        UseLayoutRounding="True" SnapsToDevicePixels="True" PreviewKeyDown="Window_KeyDown">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="32" ResizeBorderThickness="6" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+    <Border BorderBrush="{StaticResource Divider}" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions><RowDefinition Height="32" /><RowDefinition Height="*" /><RowDefinition Height="32" /></Grid.RowDefinitions>
+            <Border Background="{StaticResource Surface}" BorderBrush="{StaticResource Divider}" BorderThickness="0,0,0,1">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0">
+                        <Border BorderBrush="{StaticResource Ink}" BorderThickness="1" Padding="4,0" Margin="0,0,8,0"><TextBlock Text="S.T" FontFamily="{StaticResource HeadingFont}" FontWeight="SemiBold" FontSize="12" /></Border>
+                        <TextBlock Text="SincTrello" FontSize="12" Foreground="{StaticResource Muted}" />
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                        <Button Content="―" Width="44" Padding="0" BorderThickness="0" Click="Minimize_Click" AutomationProperties.Name="Minimizar" />
+                        <Button Content="□" Width="44" Padding="0" BorderThickness="0" Click="Maximize_Click" AutomationProperties.Name="Maximizar ou restaurar" />
+                        <Button Content="×" Width="44" Padding="0" BorderThickness="0" Click="Close_Click" AutomationProperties.Name="Fechar aplicativo" />
+                    </StackPanel>
+                    <TextBlock Text="DEMANDAS DO TRELLO EM PASTAS LOCAIS" FontSize="10" Foreground="{StaticResource Muted}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </DockPanel>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="228" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                <Border BorderBrush="{StaticResource Divider}" BorderThickness="0,0,1,0" Padding="15,24,15,16">
+                    <DockPanel LastChildFill="True">
+                        <StackPanel DockPanel.Dock="Top" Margin="10,0,8,30">
+                            <TextBlock Text="S.T" FontFamily="{StaticResource HeadingFont}" FontWeight="SemiBold" FontSize="42" />
+                            <TextBlock Text="Demandas do Trello&#10;em pastas locais" Style="{StaticResource MutedText}" Margin="0,4,0,0" />
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Bottom">
+                            <TextBlock Text="CONEXÕES" FontSize="10" Foreground="{StaticResource Muted}" Margin="10,0,0,14" />
+                            <Grid Margin="10,0,10,10"><Grid.ColumnDefinitions><ColumnDefinition Width="15" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                <Rectangle Width="6" Height="6" Stroke="{StaticResource Muted}" /><TextBlock Grid.Column="1" Text="Trello" FontSize="12" /><TextBlock Grid.Column="2" Text="{Binding TrelloConnectionLabel}" FontSize="12" Foreground="{StaticResource Muted}" />
+                            </Grid>
+                            <Grid Margin="10,0,10,10"><Grid.ColumnDefinitions><ColumnDefinition Width="15" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                <Rectangle Width="6" Height="6" Stroke="{StaticResource Muted}" /><TextBlock Grid.Column="1" Text="Principal" FontSize="12" /><TextBlock Grid.Column="2" Text="{Binding FolderConnection}" FontSize="12" Foreground="{StaticResource Muted}" />
+                            </Grid>
+                            <Grid Margin="10,0,10,17"><Grid.ColumnDefinitions><ColumnDefinition Width="15" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                <Rectangle Width="6" Height="6" Stroke="{StaticResource Muted}" /><TextBlock Grid.Column="1" Text="Espelho" FontSize="12" /><TextBlock Grid.Column="2" Text="{Binding MirrorConnection}" FontSize="12" Foreground="{StaticResource Muted}" />
+                            </Grid>
+                            <Button Content="Sincronizar agora" Command="{Binding NavigateCommand}" CommandParameter="sync" />
+                            <Button Content="{Binding DemoButtonLabel}" Style="{StaticResource LinkButton}" HorizontalContentAlignment="Center" Command="{Binding ToggleDemoCommand}" IsEnabled="{Binding IsIdle}" AutomationProperties.AutomationId="ToggleDemo" Margin="0,8,0,0" />
+                        </StackPanel>
+                        <StackPanel>
+                            <RadioButton GroupName="Navigation" Style="{StaticResource NavButton}" IsChecked="{Binding IsOverview, Mode=OneWay}" Command="{Binding NavigateCommand}" CommandParameter="overview" AutomationProperties.AutomationId="NavOverview"><StackPanel Orientation="Horizontal"><Path Data="M1,1 H7 V9 H1 Z M11,1 H17 V5 H11 Z M1,13 H7 V17 H1 Z M11,9 H17 V17 H11 Z" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" StrokeThickness="1.2" Width="18" Height="18" Margin="0,0,10,0" /><TextBlock Text="Visão Geral" /></StackPanel></RadioButton>
+                            <RadioButton GroupName="Navigation" Style="{StaticResource NavButton}" IsChecked="{Binding IsDemands, Mode=OneWay}" Command="{Binding NavigateCommand}" CommandParameter="demands" AutomationProperties.AutomationId="NavDemands"><StackPanel Orientation="Horizontal"><Path Data="M0,3 H2 M6,3 H18 M0,9 H2 M6,9 H18 M0,15 H2 M6,15 H18" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" StrokeThickness="1.2" Width="18" Height="18" Margin="0,0,10,0" /><TextBlock Text="Demandas" /><TextBlock Text="{Binding DemandCount}" Margin="48,0,0,0" Foreground="{StaticResource Muted}" FontSize="12" /></StackPanel></RadioButton>
+                            <RadioButton GroupName="Navigation" Style="{StaticResource NavButton}" IsChecked="{Binding IsSync, Mode=OneWay}" Command="{Binding NavigateCommand}" CommandParameter="sync" AutomationProperties.AutomationId="NavSync"><StackPanel Orientation="Horizontal"><Path Data="M2,8 A7,7 0 0 1 14,3 L17,6 M17,1 V6 H12 M16,10 A7,7 0 0 1 4,15 L1,12 M1,17 V12 H6" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" StrokeThickness="1.2" Width="18" Height="18" Margin="0,0,10,0" /><TextBlock Text="Sincronizar" /></StackPanel></RadioButton>
+                            <RadioButton GroupName="Navigation" Style="{StaticResource NavButton}" IsChecked="{Binding IsBackup, Mode=OneWay}" Command="{Binding NavigateCommand}" CommandParameter="backup" AutomationProperties.AutomationId="NavBackup"><StackPanel Orientation="Horizontal"><Path Data="M9,1 L16,4 V10 Q16,15 9,18 Q2,15 2,10 V4 Z M5,9 L8,12 L13,7" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" StrokeThickness="1.2" Width="18" Height="18" Margin="0,0,10,0" /><TextBlock Text="Backup" /></StackPanel></RadioButton>
+                            <RadioButton GroupName="Navigation" Style="{StaticResource NavButton}" IsChecked="{Binding IsHistory, Mode=OneWay}" Command="{Binding NavigateCommand}" CommandParameter="history" AutomationProperties.AutomationId="NavHistory"><StackPanel Orientation="Horizontal"><Path Data="M2,7 A8,8 0 1 1 2,12 M1,1 V7 H7 M9,4 V10 L13,12" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" StrokeThickness="1.2" Width="18" Height="18" Margin="0,0,10,0" /><TextBlock Text="Histórico" /></StackPanel></RadioButton>
+                            <RadioButton GroupName="Navigation" Style="{StaticResource NavButton}" IsChecked="{Binding IsSettings, Mode=OneWay}" Command="{Binding NavigateCommand}" CommandParameter="settings" AutomationProperties.AutomationId="NavSettings"><StackPanel Orientation="Horizontal"><Path Data="M7,1 H11 L12,4 L15,3 L18,7 L15,9 L18,12 L15,16 L12,15 L11,18 H7 L6,15 L3,16 L0,12 L3,9 L0,7 L3,3 L6,4 Z M12,9 A3,3 0 1 1 6,9 A3,3 0 1 1 12,9" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" StrokeThickness="1.1" Width="18" Height="18" Margin="0,0,10,0" /><TextBlock Text="Configurações" /></StackPanel></RadioButton>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                    <Grid Margin="28,23,28,20">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="320" /></Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="{Binding PageTitle}" FontFamily="{StaticResource HeadingFont}" FontWeight="SemiBold" FontSize="36" />
+                            <TextBlock Text="{Binding PageQuestion}" Foreground="{StaticResource Muted}" Margin="0,4,0,0" />
+                        </StackPanel>
+                        <Grid Grid.Column="1" VerticalAlignment="Center">
+                            <TextBox x:Name="SearchBox" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" Padding="30,9,52,9" AutomationProperties.Name="Buscar SSC, cliente ou descrição" AutomationProperties.AutomationId="Search" ToolTip="Buscar SSC, cliente ou descrição · Ctrl K" />
+                            <Path Data="M12,7 A5,5 0 1 1 2,7 A5,5 0 1 1 12,7 M11,11 L16,16" Stroke="{StaticResource Muted}" StrokeThickness="1.2" Width="17" Height="17" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="9,0,0,0" IsHitTestVisible="False" />
+                            <TextBlock Text="Buscar SSC, cliente ou descrição" Foreground="{StaticResource Muted}" FontSize="12" Margin="31,0,50,0" VerticalAlignment="Center" IsHitTestVisible="False">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed" /><Style.Triggers><DataTrigger Binding="{Binding Query}" Value=""><Setter Property="Visibility" Value="Visible" /></DataTrigger></Style.Triggers></Style></TextBlock.Style>
+                            </TextBlock>
+                            <Border BorderBrush="{StaticResource Divider}" BorderThickness="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0" Padding="4,1" IsHitTestVisible="False"><TextBlock Text="Ctrl K" FontSize="10" Foreground="{StaticResource Muted}" /></Border>
+                        </Grid>
+                    </Grid>
+                    <Border Grid.Row="1" Background="{StaticResource AccentTint}" BorderBrush="{StaticResource Divider}" BorderThickness="0,1,0,1" Padding="28,8">
+                        <StackPanel>
+                            <DockPanel>
+                                <Button DockPanel.Dock="Right" Content="Cancelar leitura" Click="CancelRead_Click" Padding="8,4" FontSize="12" Visibility="{Binding IsBusy, Converter={StaticResource Visible}}" Margin="8,0,0,0" />
+                                <Button DockPanel.Dock="Right" Content="Atualizar demandas" Click="RefreshTrello_Click" Padding="8,4" FontSize="12" IsEnabled="{Binding CanRefresh}" Visibility="{Binding IsConnected, Converter={StaticResource Visible}}" AutomationProperties.AutomationId="RefreshTrello" Margin="8,0,0,0" />
+                                <TextBlock Text="{Binding ModeLabel}" FontSize="10" Foreground="{StaticResource AccentDeep}" VerticalAlignment="Center" />
+                            </DockPanel>
+                            <ProgressBar Height="3" IsIndeterminate="True" Foreground="{StaticResource Accent}" Visibility="{Binding IsBusy, Converter={StaticResource Visible}}" Margin="0,6,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Overview -->
+                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Visibility="{Binding IsOverview, Converter={StaticResource Visible}}" Padding="28,25,28,28">
+                        <StackPanel>
+                            <ContentControl Style="{StaticResource Blueprint}" Margin="0,0,0,26">
+                                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="64" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                    <Border Width="48" Height="48" BorderBrush="{StaticResource Accent}" BorderThickness="1" VerticalAlignment="Center"><TextBlock Text="!" FontFamily="{StaticResource HeadingFont}" FontSize="32" Foreground="{StaticResource AccentText}" HorizontalAlignment="Center" VerticalAlignment="Center" /></Border>
+                                    <StackPanel Grid.Column="1" Margin="0,0,22,0"><TextBlock Text="{Binding Headline}" FontFamily="{StaticResource HeadingFont}" FontSize="34" /><TextBlock Text="{Binding OverviewText}" Style="{StaticResource MutedText}" Margin="0,7,0,0" /></StackPanel>
+                                    <Button Grid.Column="2" Content="Configurar S.T" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center" Command="{Binding NavigateCommand}" CommandParameter="settings" Visibility="{Binding IsDisconnected, Converter={StaticResource Visible}}" />
+                                    <Button Grid.Column="2" Content="Conferir alterações" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center" Command="{Binding NavigateCommand}" CommandParameter="sync" Visibility="{Binding DemoMode, Converter={StaticResource Visible}}" />
+                                    <Button Grid.Column="2" Content="Ver demandas" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center" Command="{Binding NavigateCommand}" CommandParameter="demands" Visibility="{Binding HasLiveData, Converter={StaticResource Visible}}" />
+                                </Grid>
+                            </ContentControl>
+                            <UniformGrid Columns="4" Margin="0,0,0,28">
+                                <Border BorderBrush="{StaticResource Divider}" BorderThickness="1" Padding="17,16"><StackPanel><TextBlock Text="SUAS DEMANDAS" Style="{StaticResource Kicker}" /><TextBlock Text="{Binding DemandCount}" Style="{StaticResource Metric}" /><TextBlock Text="Cards do quadro selecionado" Style="{StaticResource MutedText}" /></StackPanel></Border>
+                                <Border BorderBrush="{StaticResource Divider}" BorderThickness="0,1,1,1" Padding="17,16"><StackPanel><TextBlock Text="ÚLTIMA LEITURA DO TRELLO" Style="{StaticResource Kicker}" /><TextBlock Text="{Binding LastReadLabel}" Style="{StaticResource Metric}" FontSize="23" /><TextBlock Text="{Binding PendingCount}" Style="{StaticResource MutedText}" /></StackPanel></Border>
+                                <Border BorderBrush="{StaticResource Divider}" BorderThickness="0,1,1,1" Padding="17,16"><StackPanel><TextBlock Text="PASTA PRINCIPAL" Style="{StaticResource Kicker}" /><TextBlock Text="{Binding PrimaryPathLabel}" Style="{StaticResource Metric}" FontSize="23" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" ToolTip="{Binding PrimaryPathLabel}" /><TextBlock Text="Lista \ SSC - Cliente" Style="{StaticResource MutedText}" /></StackPanel></Border>
+                                <Border BorderBrush="{StaticResource Divider}" BorderThickness="0,1,1,1" Padding="17,16"><StackPanel><TextBlock Text="ÚLTIMO ESPELHO" Style="{StaticResource Kicker}" /><TextBlock Text="Ainda não realizado" Style="{StaticResource Metric}" FontSize="23" /><TextBlock Text="Inclui os arquivos do seu trabalho" Style="{StaticResource MutedText}" /></StackPanel></Border>
+                            </UniformGrid>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="26" /><ColumnDefinition Width="*" /><ColumnDefinition Width="26" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Precisa de atenção" Style="{StaticResource Heading}" />
+                                    <Button Command="{Binding NavigateCommand}" CommandParameter="settings" HorizontalContentAlignment="Stretch" Padding="15,14" Margin="0,0,0,10"><StackPanel><TextBlock Text="Conectar sua conta do Trello →" FontWeight="Medium" /><TextBlock Text="Escolha o quadro e as demandas que devem virar pastas." Style="{StaticResource MutedText}" Margin="0,5,0,0" /></StackPanel></Button>
+                                    <Button Command="{Binding NavigateCommand}" CommandParameter="backup" HorizontalContentAlignment="Stretch" Padding="15,14"><StackPanel><TextBlock Text="Preparar a proteção dos arquivos →" FontWeight="Medium" /><TextBlock Text="Defina uma pasta separada para o espelho do seu trabalho." Style="{StaticResource MutedText}" Margin="0,5,0,0" /></StackPanel></Button>
+                                    <Border BorderBrush="{StaticResource Accent}" BorderThickness="1" Padding="15,14" Margin="0,10,0,0" Visibility="{Binding DemoMode, Converter={StaticResource Visible}}"><StackPanel><TextBlock Text="1 conflito no exemplo" FontWeight="Medium" /><TextBlock Text="Uma pasta não foi localizada. O plano permanece bloqueado até a revisão." Style="{StaticResource MutedText}" Margin="0,5,0,0" /></StackPanel></Border>
+                                    <TextBlock Text="O Trello orienta a organização. Seus arquivos de trabalho acompanham a pasta da demanda." Style="{StaticResource MutedText}" Margin="0,22,0,0" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <DockPanel Margin="0,0,0,12"><Button DockPanel.Dock="Right" Content="Ver todas" Style="{StaticResource LinkButton}" Padding="3,0" Command="{Binding NavigateCommand}" CommandParameter="demands" /><TextBlock Text="Suas demandas por lista" Style="{StaticResource Heading}" FontSize="21" Margin="0" /></DockPanel>
+                                    <TextBlock Text="As listas serão carregadas do seu quadro após a conexão." Style="{StaticResource MutedText}" Visibility="{Binding IsDisconnected, Converter={StaticResource Visible}}" />
+                                    <ItemsControl ItemsSource="{Binding ListSummaries}"><ItemsControl.ItemTemplate><DataTemplate>
+                                        <Button Style="{StaticResource LinkButton}" Foreground="{StaticResource Ink}" HorizontalContentAlignment="Stretch" Padding="0,8" Command="{Binding DataContext.SelectListCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding Name}">
+                                            <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="25" /></Grid.ColumnDefinitions><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="7" /></Grid.RowDefinitions>
+                                                <TextBlock Text="{Binding Name}" FontSize="13" Margin="0,0,8,0" /><TextBlock Grid.Column="1" Text="{Binding Count}" HorizontalAlignment="Right" FontSize="13" />
+                                                <Border Grid.Row="1" Grid.ColumnSpan="2" Height="2" Background="{StaticResource Divider}" VerticalAlignment="Bottom"><Rectangle Fill="{StaticResource Accent}" Width="{Binding BarWidth}" HorizontalAlignment="Left" /></Border>
+                                            </Grid>
+                                        </Button>
+                                    </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                                </StackPanel>
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="Abertas recentemente" Style="{StaticResource Heading}" FontSize="21" />
+                                    <TextBlock Text="As demandas que você abrir nesta sessão aparecerão aqui." Style="{StaticResource MutedText}" Visibility="{Binding HasNoRecent, Converter={StaticResource Visible}}" />
+                                    <ItemsControl ItemsSource="{Binding RecentDemands}"><ItemsControl.ItemTemplate><DataTemplate>
+                                        <Button Style="{StaticResource LinkButton}" HorizontalContentAlignment="Stretch" Command="{Binding DataContext.OpenDemandCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"><StackPanel><TextBlock Text="{Binding Ssc}" FontWeight="Medium" /><TextBlock Text="{Binding Client}" Style="{StaticResource MutedText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" /><TextBlock Text="{Binding ListName}" FontSize="11" Foreground="{StaticResource Muted}" Margin="0,3,0,0" /></StackPanel></Button>
+                                    </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                                    <TextBlock Text="Ctrl K, número da SSC e Enter abrem a demanda direto." Style="{StaticResource MutedText}" Margin="0,20,0,0" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Demands -->
+                    <Grid Grid.Row="2" Visibility="{Binding IsDemands, Converter={StaticResource Visible}}" Margin="28,23,28,28">
+                        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                        <Grid Margin="0,0,0,18"><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="16" /><ColumnDefinition Width="190" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <ComboBox ItemsSource="{Binding ListOptions}" SelectedItem="{Binding ListFilter}" AutomationProperties.Name="Filtrar por lista" />
+                            <ComboBox Grid.Column="2" ItemsSource="{Binding FolderOptions}" SelectedItem="{Binding FolderFilter}" AutomationProperties.Name="Filtrar por estado da pasta" />
+                            <TextBlock Grid.Column="3" Text="{Binding FilterCount}" VerticalAlignment="Center" Foreground="{StaticResource Muted}" FontSize="12" Margin="18,0,0,0" />
+                        </Grid>
+                        <ContentControl Grid.Row="1" Style="{StaticResource Blueprint}" Padding="0">
+                            <Grid>
+                                <DataGrid ItemsSource="{Binding Demands}" SelectedItem="{Binding SelectedDemand}" AutomationProperties.AutomationId="DemandsGrid">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="SSC" Binding="{Binding Ssc}" Width="85" ElementStyle="{StaticResource CellText}" />
+                                        <DataGridTextColumn Header="CLIENTE" Binding="{Binding Client}" Width="1.3*" MinWidth="180" ElementStyle="{StaticResource CellText}" />
+                                        <DataGridTextColumn Header="DESCRIÇÃO" Binding="{Binding Description}" Width="1.3*" MinWidth="180" ElementStyle="{StaticResource CellText}" />
+                                        <DataGridTextColumn Header="LISTA" Binding="{Binding ListName}" Width="*" MinWidth="145" ElementStyle="{StaticResource CellText}" />
+                                        <DataGridTextColumn Header="PRIORIDADE" Binding="{Binding Priority}" Width="83" ElementStyle="{StaticResource CellText}" />
+                                        <DataGridTextColumn Header="ANEXOS" Binding="{Binding Attachments}" Width="65" ElementStyle="{StaticResource CellText}" />
+                                        <DataGridTextColumn Header="PASTA" Binding="{Binding FolderStatus}" Width="100" ElementStyle="{StaticResource CellText}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="400" Margin="30" Visibility="{Binding HasNoDemands, Converter={StaticResource Visible}}">
+                                    <TextBlock Text="Nenhuma demanda para mostrar" Style="{StaticResource Heading}" FontSize="27" TextAlignment="Center" />
+                                    <TextBlock Text="{Binding EmptyDemandText}" Style="{StaticResource MutedText}" TextAlignment="Center" />
+                                    <Button Content="Configurar conexão" Command="{Binding NavigateCommand}" CommandParameter="settings" Margin="0,20,0,0" HorizontalAlignment="Center" Visibility="{Binding IsDisconnected, Converter={StaticResource Visible}}" />
+                                </StackPanel>
+                            </Grid>
+                        </ContentControl>
+                    </Grid>
+
+                    <!-- Sync -->
+                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Visibility="{Binding IsSync, Converter={StaticResource Visible}}" Padding="28,25,28,28">
+                        <StackPanel>
+                            <ContentControl Style="{StaticResource Blueprint}"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,25,0"><TextBlock Text="Conferir antes de alterar" Style="{StaticResource Heading}" FontSize="30" /><TextBlock Text="O S.T compara o quadro com suas pastas e apresenta o que precisa criar, mover ou renomear." Style="{StaticResource MutedText}" /><TextBlock Text="A primeira conferência estará disponível após a conexão e a leitura das pastas." Style="{StaticResource MutedText}" Margin="0,8,0,0" /></StackPanel>
+                                <Button Grid.Column="1" Content="Verificar alterações" Style="{StaticResource PrimaryButton}" IsEnabled="False" VerticalAlignment="Center" ToolTipService.ShowOnDisabled="True" ToolTip="A conexão com o Trello e a leitura das pastas serão implementadas na próxima etapa." />
+                            </Grid></ContentControl>
+                            <UniformGrid Columns="4" Margin="0,26,0,28">
+                                <StackPanel><TextBlock Text="01 / TRELLO" Style="{StaticResource Kicker}" /><TextBlock Text="Ler quadro e seus cards" Style="{StaticResource MutedText}" /></StackPanel>
+                                <StackPanel><TextBlock Text="02 / PASTAS" Style="{StaticResource Kicker}" /><TextBlock Text="Localizar cada demanda" Style="{StaticResource MutedText}" /></StackPanel>
+                                <StackPanel><TextBlock Text="03 / PLANO" Style="{StaticResource Kicker}" /><TextBlock Text="Revisar mudanças e conflitos" Style="{StaticResource MutedText}" /></StackPanel>
+                                <StackPanel><TextBlock Text="04 / APLICAÇÃO" Style="{StaticResource Kicker}" /><TextBlock Text="Organizar e registrar" Style="{StaticResource MutedText}" /></StackPanel>
+                            </UniformGrid>
+                            <StackPanel Visibility="{Binding DemoMode, Converter={StaticResource Visible}}">
+                                <TextBlock Text="Prévia das alterações · exemplo" Style="{StaticResource Heading}" />
+                                <DataGrid ItemsSource="{Binding PlanRows}" Height="215"><DataGrid.Columns><DataGridTextColumn Header="OPERAÇÃO" Binding="{Binding Operation}" Width="110" /><DataGridTextColumn Header="DEMANDA" Binding="{Binding Demand}" Width="*" ElementStyle="{StaticResource CellText}" /><DataGridTextColumn Header="LISTA DE DESTINO" Binding="{Binding Destination}" Width="230" ElementStyle="{StaticResource CellText}" /></DataGrid.Columns></DataGrid>
+                                <Border BorderBrush="{StaticResource Accent}" BorderThickness="1" Padding="18" Margin="0,20,0,20"><StackPanel><TextBlock Text="1 conflito impede a aplicação" FontWeight="Medium" /><TextBlock Text="SSC 1000105 · pasta conhecida não localizada. A sincronização real exigirá sua revisão antes de continuar." Style="{StaticResource MutedText}" Margin="0,5,0,0" /><TextBlock Text="Esta é uma prévia visual. Nenhuma pasta foi lida ou modificada." Style="{StaticResource MutedText}" Margin="0,8,0,0" /></StackPanel></Border>
+                            </StackPanel>
+                            <Border BorderBrush="{StaticResource Divider}" BorderThickness="0,1,0,0" Padding="0,22,0,0">
+                                <DockPanel><Button DockPanel.Dock="Right" Content="Aplicar alterações" IsEnabled="False" ToolTipService.ShowOnDisabled="True" ToolTip="O executor de arquivos ainda não está disponível." /><StackPanel Margin="0,0,20,0"><TextBlock Text="Seus arquivos acompanham a demanda" Style="{StaticResource Heading}" FontSize="21" Margin="0,0,0,5" /><TextBlock Text="SQL, Excel, BGR e demais arquivos permanecem dentro da pasta. Cards ausentes do quadro não provocam exclusão de pastas." Style="{StaticResource MutedText}" /></StackPanel></DockPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Backup -->
+                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Visibility="{Binding IsBackup, Converter={StaticResource Visible}}" Padding="28,25,28,28">
+                        <StackPanel>
+                            <TextBlock Text="Uma segunda cópia do seu trabalho" Style="{StaticResource Heading}" FontSize="30" /><TextBlock Text="O espelho acompanha a pasta principal. O snapshot ZIP guarda uma cópia de um momento específico." Style="{StaticResource MutedText}" Margin="0,0,0,28" />
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="26" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                <ContentControl Style="{StaticResource Blueprint}"><StackPanel><TextBlock Text="01 / ESPELHO" Style="{StaticResource Kicker}" /><TextBlock Text="Cópia incremental" Style="{StaticResource Heading}" FontSize="28" /><TextBlock Text="PASTA PRINCIPAL" Style="{StaticResource Kicker}" Margin="0,10,0,6" /><TextBlock Text="{Binding PrimaryPathLabel}" Margin="0,0,0,18" TextWrapping="Wrap" /><TextBlock Text="DESTINO DO ESPELHO" Style="{StaticResource Kicker}" /><TextBlock Text="{Binding BackupPathLabel}" Margin="0,0,0,18" TextWrapping="Wrap" /><TextBlock Text="Ainda não há cópias realizadas. Defina o destino em Configurações." Style="{StaticResource MutedText}" /><Button Content="Configurar pastas" Command="{Binding NavigateCommand}" CommandParameter="settings" Margin="0,22,0,8" /><Button Content="Atualizar espelho" IsEnabled="False" ToolTipService.ShowOnDisabled="True" ToolTip="O serviço de espelho será implementado após a sincronização." /></StackPanel></ContentControl>
+                                <ContentControl Grid.Column="2" Style="{StaticResource Blueprint}"><StackPanel><TextBlock Text="02 / SNAPSHOT ZIP" Style="{StaticResource Kicker}" /><TextBlock Text="Um ponto no tempo" Style="{StaticResource Heading}" FontSize="28" /><TextBlock Text="Guarde uma versão completa da estrutura de pastas, incluindo os arquivos produzidos por você." Style="{StaticResource MutedText}" Margin="0,10,0,22" /><Border BorderBrush="{StaticResource Divider}" BorderThickness="0,1,0,1" Padding="0,18"><TextBlock Text="Nenhum snapshot criado." Style="{StaticResource MutedText}" /></Border><TextBlock Text="Os snapshots anteriores serão preservados." Style="{StaticResource MutedText}" Margin="0,22,0,22" /><Button Content="Criar snapshot ZIP" IsEnabled="False" ToolTipService.ShowOnDisabled="True" ToolTip="A criação de snapshots será implementada após o espelho." /></StackPanel></ContentControl>
+                            </Grid>
+                            <TextBlock Text="O espelho terá sentido único: principal → destino. Escolha pastas separadas; o S.T não usará o espelho para alterar o Trello." Style="{StaticResource MutedText}" Margin="0,25,0,0" />
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- History -->
+                    <Grid Grid.Row="2" Visibility="{Binding IsHistory, Converter={StaticResource Visible}}" Margin="28,25,28,28">
+                        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                        <TextBlock Text="O registro do que aconteceu" Style="{StaticResource Heading}" FontSize="28" />
+                        <TextBlock Grid.Row="1" Text="Sincronizações, espelhos e snapshots aparecerão aqui quando forem executados. Os registros serão somente leitura." Style="{StaticResource MutedText}" Margin="0,0,0,22" />
+                        <ContentControl Grid.Row="2" Style="{StaticResource Blueprint}"><StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="430"><TextBlock Text="Seu histórico começa na primeira execução" Style="{StaticResource Heading}" FontSize="29" TextAlignment="Center" /><TextBlock Text="Nenhuma sincronização, cópia ou criação de ZIP foi realizada pelo aplicativo." Style="{StaticResource MutedText}" TextAlignment="Center" /><Button Content="Ir para configurações" Command="{Binding NavigateCommand}" CommandParameter="settings" HorizontalAlignment="Center" Margin="0,23,0,0" /></StackPanel></ContentControl>
+                    </Grid>
+
+                    <!-- Settings -->
+                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Visibility="{Binding IsSettings, Converter={StaticResource Visible}}" Padding="28,23,28,28">
+                        <StackPanel>
+                            <TextBlock Text="Conecte sua conta, escolha um quadro e carregue suas demandas. Salve também as preferências desta máquina." Style="{StaticResource MutedText}" Margin="0,0,0,20" />
+                            <Grid Margin="0,0,0,22"><Grid.ColumnDefinitions><ColumnDefinition Width="235" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,28,0"><TextBlock Text="Conexão com o Trello" Style="{StaticResource Heading}" FontSize="22" /><TextBlock Text="Acesso de leitura para acompanhar seu quadro e organizar as pastas." Style="{StaticResource MutedText}" /></StackPanel>
+                                <Border Grid.Column="1" BorderBrush="{StaticResource Divider}" BorderThickness="1" Padding="16"><StackPanel>
+                                    <TextBlock Text="{Binding ConnectionText}" FontWeight="Medium" TextWrapping="Wrap" />
+                                    <TextBlock Text="Autorização no navegador e credencial protegida pelo Windows. O S.T consulta os cards sem modificar o quadro." Style="{StaticResource MutedText}" Margin="0,7,0,12" />
+                                    <WrapPanel><Button Content="Conectar / trocar conta" Click="ConnectTrello_Click" IsEnabled="{Binding CanConnect}" Margin="0,0,8,8" AutomationProperties.AutomationId="ConnectTrello" /><Button Content="Desconectar" Click="DisconnectTrello_Click" IsEnabled="{Binding CanDisconnect}" Margin="0,0,0,8" AutomationProperties.AutomationId="DisconnectTrello" /></WrapPanel>
+                                    <TextBlock Text="{Binding Notice}" Style="{StaticResource MutedText}" />
+                                </StackPanel></Border>
+                            </Grid>
+                            <Border BorderBrush="{StaticResource Divider}" BorderThickness="0,1,0,0" Padding="0,22,0,22"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="235" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,28,0"><TextBlock Text="Quadro e responsável" Style="{StaticResource Heading}" FontSize="22" /><TextBlock Text="O quadro determina as listas e os nomes das demandas." Style="{StaticResource MutedText}" /></StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <Label Content="Quadro da sua conta" Target="{Binding ElementName=BoardPicker}" Padding="0,0,0,6" />
+                                    <ComboBox x:Name="BoardPicker" ItemsSource="{Binding Boards}" SelectedItem="{Binding SelectedBoard}" DisplayMemberPath="Name" IsEnabled="{Binding CanSelectBoard}" AutomationProperties.AutomationId="BoardPicker" />
+                                    <TextBlock Text="{Binding CurrentBoardName}" Style="{StaticResource MutedText}" Margin="0,8,0,0" />
+                                    <Button Content="Carregar demandas" Click="RefreshTrello_Click" IsEnabled="{Binding CanRefresh}" HorizontalAlignment="Left" Margin="0,12,0,12" AutomationProperties.AutomationId="LoadBoard" />
+                                    <Label Content="Conta usada no filtro de membro" Target="{Binding ElementName=UsernameInput}" Padding="0,4,0,6" /><TextBox x:Name="UsernameInput" Text="{Binding Username, Mode=OneWay}" IsReadOnly="True" AutomationProperties.AutomationId="TrelloUsername" />
+                                    <TextBlock Text="Filtro ativo: somente cards em que a conta autorizada é membro." Style="{StaticResource MutedText}" Margin="0,10,0,0" />
+                                </StackPanel>
+                            </Grid></Border>
+                            <Border BorderBrush="{StaticResource Divider}" BorderThickness="0,1,0,0" Padding="0,22,0,22"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="235" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,28,0"><TextBlock Text="Pasta principal" Style="{StaticResource Heading}" FontSize="22" /><TextBlock Text="Estrutura: Lista \ SSC - Cliente. Se o disco ficar indisponível, o S.T para e avisa." Style="{StaticResource MutedText}" /></StackPanel>
+                                <StackPanel Grid.Column="1"><DockPanel><Button DockPanel.Dock="Right" Content="Escolher…" Click="BrowsePrimary_Click" Margin="8,0,0,0" /><TextBox Text="{Binding PrimaryPath, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Pasta principal" AutomationProperties.AutomationId="PrimaryPath" /></DockPanel><TextBlock Text="A seleção salva apenas o caminho. A leitura das pastas faz parte da próxima etapa." Style="{StaticResource MutedText}" Margin="0,9,0,0" /></StackPanel>
+                            </Grid></Border>
+                            <Border BorderBrush="{StaticResource Divider}" BorderThickness="0,1,0,0" Padding="0,22,0,22"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="235" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,28,0"><TextBlock Text="Anexos e sincronização" Style="{StaticResource Heading}" FontSize="22" /><TextBlock Text="Preferências para quando a sincronização estiver disponível." Style="{StaticResource MutedText}" /></StackPanel>
+                                <StackPanel Grid.Column="1"><CheckBox Content="Baixar anexos dos cards" IsChecked="{Binding DownloadAttachments}" /><CheckBox Content="Pedir confirmação antes de aplicar alterações" IsChecked="{Binding ConfirmPlan}" /><TextBlock Text="Conflitos sempre bloquearão a aplicação das alterações. A primeira versão terá execução manual." Style="{StaticResource MutedText}" Margin="0,9,0,0" /></StackPanel>
+                            </Grid></Border>
+                            <Border BorderBrush="{StaticResource Divider}" BorderThickness="0,1,0,0" Padding="0,22,0,22"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="235" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,28,0"><TextBlock Text="Espelho" Style="{StaticResource Heading}" FontSize="22" /><TextBlock Text="Escolha outra pasta, preferencialmente em outro disco." Style="{StaticResource MutedText}" /></StackPanel>
+                                <StackPanel Grid.Column="1"><DockPanel><Button DockPanel.Dock="Right" Content="Escolher…" Click="BrowseBackup_Click" Margin="8,0,0,0" /><TextBox Text="{Binding BackupPath, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Destino do espelho" AutomationProperties.AutomationId="BackupPath" /></DockPanel><TextBlock Text="A pasta principal e o espelho não podem ser iguais ou ficar uma dentro da outra." Style="{StaticResource MutedText}" Margin="0,9,0,0" /></StackPanel>
+                            </Grid></Border>
+                            <Button Content="Salvar preferências" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Click="SaveSettings_Click" IsEnabled="{Binding CanSave}" AutomationProperties.AutomationId="SaveSettings" Margin="0,5,0,0" />
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Demand detail drawer -->
+                    <Border Grid.RowSpan="3" Width="490" HorizontalAlignment="Right" Background="{StaticResource Ground}" BorderBrush="{StaticResource Accent}" BorderThickness="1,0,0,0" Visibility="{Binding HasSelection, Converter={StaticResource Visible}}">
+                        <Grid Margin="24"><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                            <DockPanel Margin="0,0,0,17"><Button DockPanel.Dock="Right" Content="×" Command="{Binding CloseDemandCommand}" Width="32" Padding="0,4" AutomationProperties.Name="Fechar detalhes" AutomationProperties.AutomationId="CloseDetails" /><TextBlock Text="{Binding DetailKicker}" Style="{StaticResource Kicker}" VerticalAlignment="Center" Margin="0" /></DockPanel>
+                            <StackPanel Grid.Row="1" Margin="0,0,0,20"><TextBlock Text="{Binding SelectedDemand.Name}" Style="{StaticResource Heading}" FontSize="28" Margin="0,0,0,12" /><Border BorderBrush="{StaticResource Accent}" BorderThickness="1" HorizontalAlignment="Left" Padding="8,4"><TextBlock Text="{Binding SelectedDemand.ListName}" Foreground="{StaticResource AccentText}" FontSize="12" /></Border></StackPanel>
+                            <TabControl Grid.Row="2" Background="Transparent" BorderBrush="{StaticResource Divider}" Padding="15" FontFamily="{StaticResource BodyFont}">
+                                <TabItem Header="Detalhes"><ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="0,15,0,0"><TextBlock Text="DESCRIÇÃO DA SSC" Style="{StaticResource Kicker}" /><TextBlock Text="{Binding SelectedDemand.Description}" FontSize="17" Margin="0,0,0,24" /><TextBlock Text="CLIENTE" Style="{StaticResource Kicker}" /><TextBlock Text="{Binding SelectedDemand.Client}" Margin="0,0,0,24" /><TextBlock Text="PRIORIDADE" Style="{StaticResource Kicker}" /><TextBlock Text="{Binding SelectedDemand.Priority}" Margin="0,0,0,24" /><TextBlock Text="PASTA" Style="{StaticResource Kicker}" /><TextBlock Text="{Binding SelectedDemand.FolderStatus}" Margin="0,0,0,8" /><TextBlock Text="{Binding DetailNote}" Style="{StaticResource MutedText}" /><Expander Header="Descrição completa do card" Margin="0,20,0,0" Visibility="{Binding HasLiveData, Converter={StaticResource Visible}}"><TextBlock Text="{Binding SelectedDemand.FullDescription}" Style="{StaticResource MutedText}" Margin="0,8,0,0" /></Expander></StackPanel></ScrollViewer></TabItem>
+                                <TabItem Header="Arquivos"><StackPanel Margin="0,15,0,0"><TextBlock Text="ANEXOS DO CARD" Style="{StaticResource Kicker}" /><TextBlock Text="{Binding SelectedDemand.Attachments}" Style="{StaticResource Metric}" /><TextBlock Text="{Binding AttachmentNote}" Style="{StaticResource MutedText}" /></StackPanel></TabItem>
+                                <TabItem Header="Histórico"><TextBlock Text="Ainda não existem operações reais registradas para esta demanda." Style="{StaticResource MutedText}" Margin="0,15,0,0" /></TabItem>
+                            </TabControl>
+                            <StackPanel Grid.Row="3" Margin="0,18,0,0"><UniformGrid Columns="2"><Button Content="Abrir pasta" IsEnabled="False" Margin="0,0,5,0" /><Button Content="Abrir no Trello ↗" Click="OpenCard_Click" IsEnabled="{Binding CanOpenCard}" Margin="5,0,0,0" AutomationProperties.AutomationId="OpenTrelloCard" /></UniformGrid><TextBlock Text="A abertura da pasta ficará disponível após a identificação dos arquivos locais." Style="{StaticResource MutedText}" Margin="0,10,0,0" /></StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+            <Border Grid.Row="2" BorderBrush="{StaticResource Divider}" BorderThickness="0,1,0,0" Background="{StaticResource Surface}" Padding="14,0">
+                <DockPanel><TextBlock DockPanel.Dock="Right" Text="S.T  /  LOCAL" FontSize="10" Foreground="{StaticResource Muted}" VerticalAlignment="Center" Margin="16,0,0,0" /><TextBlock Text="{Binding Notice}" FontSize="12" Foreground="{StaticResource AccentDeep}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" ToolTip="{Binding Notice}" AutomationProperties.AutomationId="StatusNotice" /></DockPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

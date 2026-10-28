@@ -1,0 +1,26 @@
+<Window x:Class="SincTrello.App.TrelloConnectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Conectar ao Trello" Style="{StaticResource {x:Type Window}}" Width="660" Height="640"
+        MinWidth="600" MinHeight="530" ResizeMode="CanResize" WindowStartupLocation="CenterOwner">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28">
+            <TextBlock Text="Conecte sua conta" Style="{StaticResource Heading}" FontSize="32" />
+            <TextBlock Text="Autorize a leitura dos seus quadros. As demandas serão filtradas pelos cards em que você é membro." Style="{StaticResource MutedText}" Margin="0,0,0,20" />
+            <TextBlock Text="1 / CHAVE DO APLICATIVO" Style="{StaticResource Kicker}" />
+            <TextBlock Text="No painel do Trello, crie ou escolha o aplicativo SincTrello e copie sua API key da aba Trello Auth." Style="{StaticResource MutedText}" />
+            <Button Content="Abrir painel do Trello ↗" Click="OpenAdmin_Click" Style="{StaticResource LinkButton}" HorizontalAlignment="Left" IsEnabled="{Binding IsIdle}" />
+            <Label Content="API key" Target="{Binding ElementName=ApiKeyInput}" Padding="0,8,0,6" />
+            <TextBox x:Name="ApiKeyInput" MaxLength="256" IsEnabled="{Binding IsIdle}" AutomationProperties.Name="API key do Trello" />
+            <TextBlock Text="2 / AUTORIZAÇÃO DE LEITURA" Style="{StaticResource Kicker}" Margin="0,22,0,8" />
+            <TextBlock Text="Abra a autorização, permita o acesso e copie o token exibido pelo Trello para o campo abaixo." Style="{StaticResource MutedText}" />
+            <Button Content="Autorizar no navegador ↗" Click="Authorize_Click" HorizontalAlignment="Left" Margin="0,12,0,10" IsEnabled="{Binding IsIdle}" />
+            <Label Content="Token autorizado" Target="{Binding ElementName=TokenInput}" Padding="0,4,0,6" />
+            <PasswordBox x:Name="TokenInput" MaxLength="1024" Padding="10,8" Background="{StaticResource Ground}" BorderBrush="{StaticResource Divider}" IsEnabled="{Binding IsIdle}" AutomationProperties.Name="Token do Trello" />
+            <TextBlock Text="O token será validado e guardado no Gerenciador de Credenciais do Windows. Ele não é salvo no banco de preferências." Style="{StaticResource MutedText}" Margin="0,10,0,15" />
+            <TextBlock Text="{Binding Notice}" Foreground="{StaticResource AccentDeep}" TextWrapping="Wrap" Margin="0,0,0,12" AutomationProperties.AutomationId="ConnectionNotice" />
+            <ProgressBar IsIndeterminate="True" Height="3" Foreground="{StaticResource Accent}" Visibility="{Binding IsBusy, Converter={StaticResource Visible}}" Margin="0,0,0,12" />
+            <DockPanel><Button DockPanel.Dock="Right" Content="Validar e conectar" Style="{StaticResource PrimaryButton}" Click="Connect_Click" IsEnabled="{Binding CanConnect}" AutomationProperties.AutomationId="ConfirmConnection" /><Button Content="Cancelar" Click="Cancel_Click" HorizontalAlignment="Left" /></DockPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

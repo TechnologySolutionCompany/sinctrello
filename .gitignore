@@ -1,0 +1,14 @@
+**/bin/
+**/obj/
+.tools/
+.vs/
+.vscode/
+*.user
+*.db*
+*.sqlite*
+logs/
+*.log
+*.tmp
+appsettings.local.json
+credentials*
+TestResults/
